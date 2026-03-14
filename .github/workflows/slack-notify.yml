@@ -1,13 +1,24 @@
-on: push
 name: Slack Notification Demo
+
+on:
+  push:
+    branches: [ "main" ]
+
 jobs:
   slackNotification:
     name: Slack Notification
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Slack Notification
-      uses: rtCamp/action-slack-notify@v2
-      env:
-        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+      - name: Checkout code
+        uses: actions/checkout@v4
 
+      - name: Slack Notification
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_CHANNEL: social       # Opcjonalne: nazwa kanału
+          SLACK_COLOR: ${{ job.status }} # Kolor paska (zielony dla sukcesu, czerwony dla błędu)
+          SLACK_ICON: https://github.com/rtCamp.png?size=48
+          SLACK_MESSAGE: 'Nowy push do repozytorium! Sprawdź zmiany: ${{ github.event.compare }}'
+          SLACK_TITLE: Powiadomienie z GitHub Actions
+          SLACK_USERNAME: GitHubBot
